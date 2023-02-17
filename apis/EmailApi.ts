@@ -119,7 +119,7 @@ export class EmailApi implements BaseEmailApi {
 
   async sendWelcomeCustomerEmail(customer: Account) {
     const htmlWelcomeCustomerMessage = `
-      <h1>Hello ${customer.firstName} ${customer.lastName}</h1>
+      <h1>Hello ${customer.firstName ?? ""} ${customer.lastName ?? ""}</h1>
       <p>We are so happy to have you here!</p>
     `;
     await this.sendEmail({
@@ -131,7 +131,7 @@ export class EmailApi implements BaseEmailApi {
 
   async sendAccountDeletionEmail(customer: Account) {
     const htmlWelcomeCustomerMessage = `
-      <h1>Hello ${customer.firstName} ${customer.lastName}</h1>
+      <h1>Hello ${customer.firstName ?? ""} ${customer.lastName ?? ""}</h1>
       <p>Your account has been deleted successfully!</p>
     `;
     await this.sendEmail({
