@@ -6,6 +6,7 @@ import { SmtpConfigurationError } from '../errors/SmtpConfigurationError';
 import { BaseEmailApi } from '../../interfaces/BaseEmailApi';
 import { Account } from '@Types/account/Account';
 import { Order } from '@Types/cart/Order';
+import getCustomerName from "../utils/get-customer-name";
 
 export class EmailApi implements BaseEmailApi {
   // Email transporter
@@ -118,8 +119,9 @@ export class EmailApi implements BaseEmailApi {
   }
 
   async sendWelcomeCustomerEmail(customer: Account) {
+    const customerName = getCustomerName(customer);
     const htmlWelcomeCustomerMessage = `
-      <h1>Hello ${customer.firstName ?? ""} ${customer.lastName ?? ""}</h1>
+      <h1>Hello ${customerName}</h1>
       <p>We are so happy to have you here!</p>
     `;
     await this.sendEmail({
@@ -130,8 +132,9 @@ export class EmailApi implements BaseEmailApi {
   }
 
   async sendAccountDeletionEmail(customer: Account) {
+    const customerName = getCustomerName(customer);
     const htmlWelcomeCustomerMessage = `
-      <h1>Hello ${customer.firstName ?? ""} ${customer.lastName ?? ""}</h1>
+      <h1>Hello ${customerName}</h1>
       <p>Your account has been deleted successfully!</p>
     `;
     await this.sendEmail({
