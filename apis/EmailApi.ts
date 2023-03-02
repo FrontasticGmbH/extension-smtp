@@ -3,12 +3,11 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { Context, Project } from '@frontastic/extension-types';
 import { SmtpConfig } from '../interfaces/SmtpConfig';
 import { SmtpConfigurationError } from '../errors/SmtpConfigurationError';
-import { BaseEmailApi } from '../../interfaces/BaseEmailApi';
 import { Account } from '@Types/account/Account';
 import { Order } from '@Types/cart/Order';
-import getCustomerName from "../utils/get-customer-name";
+import getCustomerName from '../utils/get-customer-name';
 
-export class EmailApi implements BaseEmailApi {
+export class EmailApi {
   // Email transporter
   transport: nodemailer.Transporter<SMTPTransport.SentMessageInfo>;
 
