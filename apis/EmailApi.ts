@@ -6,6 +6,7 @@ import { SmtpConfigurationError } from '../errors/SmtpConfigurationError';
 import { Account } from '@Types/account/Account';
 import { Order } from '@Types/cart/Order';
 import getCustomerName from '../utils/get-customer-name';
+import { getFromProjectConfig } from '../utils/Context';
 
 export class EmailApi {
   // Email transporter
@@ -18,7 +19,7 @@ export class EmailApi {
   client_host: string;
 
   constructor(frontasticContext: Context, locale: string) {
-    const smtpConfig = this.getSmtpConfig(frontasticContext.project);
+    const smtpConfig = this.getSmtpConfig(frontasticContext);
 
     this.client_host = smtpConfig.client_host;
     this.sender = smtpConfig.sender;
@@ -36,21 +37,27 @@ export class EmailApi {
     });
   }
 
-  protected getSmtpConfig(project: Project): SmtpConfig {
-    if (!project.configuration.hasOwnProperty('smtp')) {
+  protected getSmtpConfigValue(key: string, context: Context) {
+    const value = getFromProjectConfig(`EXTENSION_SMTP_${key}`, context);
+
+    if (!value) {
       throw new SmtpConfigurationError({
-        message: `The SMTP configuration is missing in project "${project.projectId}"`,
+        message: `The SMTP configuration option "${key}" is missing in project "${context.project.projectId}"`,
       });
     }
 
+    return value;
+  }
+
+  protected getSmtpConfig(context: Context): SmtpConfig {
     const smtpConfig: SmtpConfig = {
-      host: project.configuration.smtp.host,
-      port: project.configuration.smtp.port,
-      encryption: project.configuration.smtp.encryption,
-      user: project.configuration.smtp.user,
-      password: project.configuration.smtp.password,
-      sender: project.configuration.smtp.sender,
-      client_host: project.configuration.smtp.client_host,
+      host: this.getSmtpConfigValue('HOST', context),
+      port: this.getSmtpConfigValue('PORT', context),
+      encryption: this.getSmtpConfigValue('ENCRYPTION', context),
+      user: this.getSmtpConfigValue('USER', context),
+      password: this.getSmtpConfigValue('PASSWORD', context),
+      sender: this.getSmtpConfigValue('SENDER', context),
+      client_host: this.getSmtpConfigValue('CLIENT_HOST', context),
     };
 
     return smtpConfig;
