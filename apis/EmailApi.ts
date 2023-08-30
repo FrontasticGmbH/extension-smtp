@@ -38,7 +38,11 @@ export class EmailApi {
   }
 
   protected getSmtpConfigValue(key: string, context: Context) {
-    const value = getFromProjectConfig(`EXTENSION_SMTP_${key}`, context);
+    let value = getFromProjectConfig(`EXTENSION_SMTP_${key}`, context);
+
+    if (!value) {
+      value = context.project.configuration?.smtp?.[key.toLowerCase()];
+    }
 
     if (!value) {
       throw new SmtpConfigurationError({
